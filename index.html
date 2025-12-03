@@ -1,0 +1,3460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Lotto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- REMOVED Firebase includes -->
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --miami-color: #e74c3c;
+            --georgia-color: #3498db;
+            --newyork-color: #9b59b6;
+            --texas-color: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .container {
+            padding: 15px;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--warning-color);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: var(--warning-color);
+        }
+        
+        .header-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .time-display {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .draws-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .draw-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .draw-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .draw-card.miami {
+            border-top: 5px solid var(--miami-color);
+        }
+        
+        .draw-card.georgia {
+            border-top: 5px solid var(--georgia-color);
+        }
+        
+        .draw-card.newyork {
+            border-top: 5px solid var(--newyork-color);
+        }
+        
+        .draw-card.texas {
+            border-top: 5px solid var(--texas-color);
+        }
+        
+        .draw-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .miami .draw-icon {
+            color: var(--miami-color);
+        }
+        
+        .georgia .draw-icon {
+            color: var(--georgia-color);
+        }
+        
+        .newyork .draw-icon {
+            color: var(--newyork-color);
+        }
+        
+        .texas .draw-icon {
+            color: var(--texas-color);
+        }
+        
+        .draw-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .draw-time {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .draw-countdown {
+            background-color: var(--light-color);
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .draw-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .draw-btn {
+            flex: 1;
+            padding: 6px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            background-color: var(--light-color);
+            transition: background-color 0.3s;
+        }
+        
+        .draw-btn:hover {
+            background-color: #dde4e6;
+        }
+        
+        .draw-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .draw-btn.morning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .draw-btn.evening {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .results-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .result-card {
+            background-color: var(--light-color);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .result-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .result-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .nav-item.active {
+            color: var(--secondary-color);
+        }
+        
+        .nav-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Styles pour les écrans de paris */
+        .betting-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 100;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .betting-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .betting-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .bet-types-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .bet-type-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .bet-type-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .bet-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .bet-type-card h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .bet-multiplier {
+            font-size: 0.9rem;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .bet-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .bet-option {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .bet-option:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .bet-option-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .bet-option h3 {
+            font-size: 1.2rem;
+        }
+        
+        .bet-form {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .number-inputs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .number-inputs input {
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .bet-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+            flex: 2;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            flex: 1;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dde4e6;
+        }
+        
+        .active-bets {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .bet-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .bet-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bet-details {
+            flex: 2;
+        }
+        
+        .bet-amount {
+            flex: 1;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .bet-remove {
+            color: var(--accent-color);
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .bet-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--light-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .submit-bet {
+            background-color: var(--success-color);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .submit-bet:hover {
+            background-color: #219955;
+        }
+        
+        /* Styles pour les options Lotto 5 */
+        .lotto-options {
+            margin-bottom: 15px;
+        }
+        
+        .option-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        /* Styles pour les boules terminant par N */
+        .n-balls-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .n-ball {
+            background-color: var(--light-color);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .n-ball:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Styles pour l'interface optimisée */
+        .quick-bet-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .quick-number-input {
+            flex: 2;
+        }
+        
+        .quick-amount-input {
+            flex: 1;
+        }
+        
+        /* Styles pour les autres écrans */
+        .screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 100;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .screen-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .screen-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        /* Animation pour l'affichage des écrans */
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s forwards;
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); }
+            to { transform: translateX(100%); }
+        }
+        
+        .slide-out {
+            animation: slideOut 0.3s forwards;
+        }
+        
+        /* Styles pour l'impression */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-ticket, .print-ticket * {
+                visibility: visible;
+            }
+            .print-ticket {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            
+            .ticket-logo {
+                max-width: 80px;
+                height: auto;
+            }
+        }
+        
+        /* Styles pour la configuration */
+        .config-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .config-status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .status-connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .draw-info {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .draw-info h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .draw-info p {
+            margin-bottom: 5px;
+        }
+
+        /* Nouveaux styles pour les boutons BO */
+        .bo-ball {
+            background-color: var(--warning-color);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        .bo-ball:hover {
+            background-color: #e67e22;
+        }
+
+        /* Styles pour les options multiples */
+        .multi-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .multi-option:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .multi-option.selected {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .multi-option input {
+            width: auto;
+        }
+        
+        /* Nouveaux styles pour les boutons d'impression */
+        .ticket-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .ticket-action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .save-ticket {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .save-ticket:hover {
+            background-color: #2980b9;
+        }
+        
+        .print-ticket-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .print-ticket-btn:hover {
+            background-color: #219955;
+        }
+        
+        /* Styles pour l'historique */
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .history-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .history-draw {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .history-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .history-bets {
+            margin-bottom: 10px;
+        }
+        
+        .history-bet {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 0.9rem;
+        }
+        
+        .history-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid var(--light-color);
+            font-weight: bold;
+        }
+        
+        /* Nouveaux styles pour les boutons enregistrer et imprimer */
+        .ticket-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--light-color);
+        }
+        
+        .ticket-footer-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-history {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 2;
+        }
+        
+        .search-btn {
+            flex: 1;
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .search-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Styles pour les rapports */
+        .reports-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .report-btn {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .report-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .report-btn.general {
+            grid-column: 1 / -1;
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .report-btn.general:hover {
+            background-color: #e67e22;
+        }
+        
+        .report-results {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Nouveau style pour le bouton enregistrer et imprimer */
+        .save-print-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .save-print-btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* Styles pour l'écran de connexion */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .login-logo .logo {
+            font-size: 3rem;
+            color: var(--warning-color);
+        }
+        
+        .login-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .login-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Nouveaux styles pour l'affichage des paris groupés */
+        .bets-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        
+        .bets-table th {
+            background-color: var(--light-color);
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .bets-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bets-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .grouped-bets {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .group-header {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .group-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .group-item {
+            background-color: white;
+            padding: 5px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+        
+        .bet-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bet-summary:last-child {
+            border-bottom: none;
+        }
+        
+        .bet-type {
+            font-weight: bold;
+            min-width: 100px;
+        }
+        
+        .bet-numbers {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .bet-amount-summary {
+            min-width: 80px;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        /* Styles pour les options cochées par défaut */
+        .option-default-checked {
+            background-color: #e8f4fc;
+            border-color: var(--secondary-color);
+        }
+        
+        /* Styles pour la synchronisation Supabase */
+        .sync-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .sync-connected {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .sync-disconnected {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .sync-pending {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        /* Styles pour la configuration Supabase */
+        .supabase-config {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .supabase-config h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .supabase-config textarea {
+            width: 100%;
+            height: 120px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        /* Nouveaux styles pour les notifications */
+        .notification {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .notification.error {
+            background-color: var(--accent-color);
+        }
+        
+        .notification i {
+            font-size: 1.2rem;
+        }
+        
+        /* Styles pour le logo dans le ticket */
+        .ticket-logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .ticket-logo {
+            max-width: 100px;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        /* Styles pour les messages de chargement */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            color: white;
+            font-size: 1.2rem;
+            flex-direction: column;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Écran de connexion -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="logo">
+                    <i class="fas fa-dice"></i>
+                </div>
+            </div>
+            <h2 class="login-title">Nova Lotto</h2>
+            <div class="login-error" id="login-error">
+                Kòd sekirite a pa kòrèk oswa li deja itilize sou yon lòt aparèy.
+            </div>
+            <div class="form-group">
+                <label for="security-code">Kòd Sekirite</label>
+                <input type="password" id="security-code" placeholder="Antre kòd sekirite a">
+            </div>
+            <button class="submit-bet" id="login-btn">Konekte</button>
+            
+            <!-- Configuration API optionnelle -->
+            <div class="supabase-config" style="margin-top: 20px; display: none;" id="api-config-section">
+                <h4>Konfigirasyon API (Opsyonèl)</h4>
+                <p><small>Si ou gen yon kontwol santral, rantre URL API a:</small></p>
+                <div class="form-group">
+                    <label for="api-url">URL API</label>
+                    <input type="text" id="api-url" placeholder="https://nova-lotto.onrender.com/api">
+                </div>
+                <button class="btn-secondary" id="save-api-config" style="width: 100%;">Sove Konfigirasyon</button>
+            </div>
+            <button class="btn-secondary" id="toggle-api-config" style="width: 100%; margin-top: 10px;">
+                <i class="fas fa-cog"></i> Konfigirasyon API
+            </button>
+        </div>
+    </div>
+    
+    <!-- Indicateur de synchronisation -->
+    <div class="sync-status sync-disconnected" id="sync-status" style="display: none;">
+        <i class="fas fa-cloud"></i> <span id="sync-text">Pa Konekte</span>
+    </div>
+    
+    <!-- Overlay de chargement -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading"></div>
+        <div id="loading-message">Chargement...</div>
+    </div>
+    
+    <div class="container" id="main-container" style="display: none;">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="logo-borlette.jpg" alt="Logo Nova Lotto" class="logo-image" id="company-logo">
+                    <div class="logo">
+                        <i class="fas fa-dice"></i>
+                    </div>
+                </div>
+                <div class="header-text">
+                    <h1>Nova Lotto</h1>
+                    <p>Chwazi yon Jwet</p>
+                </div>
+            </div>
+            <div class="time-display">
+                <i class="fas fa-clock"></i> <span id="current-time">Samdi, 29 Nov - 10:45 AM</span>
+            </div>
+        </header>
+        
+        <div class="draws-container">
+            <div class="draw-card miami" data-draw="miami">
+                <div class="draw-icon">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <h3>Miami</h3>
+                <div class="draw-buttons">
+                    <button class="draw-btn morning active" data-time="morning">1:30 PM</button>
+                    <button class="draw-btn evening" data-time="evening">9:50 PM</button>
+                </div>
+                <div class="draw-countdown">18 h 30 min</div>
+            </div>
+            
+            <div class="draw-card georgia" data-draw="georgia">
+                <div class="draw-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3>Georgia</h3>
+                <div class="draw-buttons">
+                    <button class="draw-btn morning active" data-time="morning">12:30 PM</button>
+                    <button class="draw-btn evening" data-time="evening">7:00 PM</button>
+                </div>
+                <div class="draw-countdown">17 h 29 min</div>
+            </div>
+            
+            <div class="draw-card newyork" data-draw="newyork">
+                <div class="draw-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3>New York</h3>
+                <div class="draw-buttons">
+                    <button class="draw-btn morning active" data-time="morning">2:30 PM</button>
+                    <button class="draw-btn evening" data-time="evening">8:00 PM</button>
+                </div>
+                <div class="draw-countdown">19 h 30 min</div>
+            </div>
+            
+            <div class="draw-card texas" data-draw="texas">
+                <div class="draw-icon">
+                    <i class="fas fa-hat-cowboy"></i>
+                </div>
+                <h3>Texas</h3>
+                <div class="draw-buttons">
+                    <button class="draw-btn morning active" data-time="morning">12:00 PM</button>
+                    <button class="draw-btn evening" data-time="evening">6:00 PM</button>
+                </div>
+                <div class="draw-countdown">18 h 27 min</div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="section-title">
+                <i class="fas fa-trophy"></i>
+                <h2>Dènye Rezilta</h2>
+            </div>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <h4>Miami</h4>
+                    <div class="result-number">451</div>
+                </div>
+                <div class="result-card">
+                    <h4>Georgia</h4>
+                    <div class="result-number">327</div>
+                </div>
+                <div class="result-card">
+                    <h4>New York</h4>
+                    <div class="result-number">892</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-nav" id="bottom-nav" style="display: none;">
+        <div class="nav-item active" data-screen="home">
+            <div class="nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <span>Akèy</span>
+        </div>
+        <div class="nav-item" data-screen="winning-tickets">
+            <div class="nav-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <span>Fiche Gagnant</span>
+        </div>
+        <div class="nav-item" data-screen="history">
+            <div class="nav-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <span>Istorik</span>
+        </div>
+        <div class="nav-item" data-screen="config">
+            <div class="nav-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+            <span>Konfigirasyon</span>
+        </div>
+    </div>
+    
+    <!-- Écran de sélection des paris -->
+    <div class="betting-screen" id="betting-screen">
+        <div class="betting-header">
+            <button class="back-button" id="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="betting-title" id="betting-title">Mete Parye Ou</h2>
+        </div>
+        
+        <div class="bet-types-container" id="bet-types-container">
+            <!-- Les types de paris seront chargés dynamiquement -->
+        </div>
+        
+        <div class="bet-form" id="bet-form">
+            <!-- Le formulaire de pari sera chargé dynamiquement -->
+        </div>
+        
+        <div class="active-bets" id="active-bets">
+            <div class="ticket-actions">
+                <button class="ticket-action-btn save-print-btn" id="save-print-ticket">Sove & Enprime Fiche</button>
+            </div>
+            <h3>Parye Aktif</h3>
+            <div id="bets-list">
+                <!-- Liste des paris actifs -->
+            </div>
+            <div class="bet-total">
+                <span>Total:</span>
+                <span id="bet-total">0 goud</span>
+            </div>
+            <button class="submit-bet" id="submit-bet">Konfime Parye</button>
+        </div>
+    </div>
+    
+    <!-- Écran des fiches -->
+    <div class="screen" id="tickets-screen">
+        <div class="screen-header">
+            <button class="back-button" data-screen="home">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="screen-title">Fiche Parye</h2>
+        </div>
+        
+        <div class="active-bets">
+            <div class="ticket-logo-container">
+                <img src="logo-borlette.jpg" alt="Logo Nova Lotto" class="ticket-logo" id="ticket-logo">
+            </div>
+            <div class="bet-total">
+                <span>Nimewo Fiche:</span>
+                <span id="ticket-number">#001234</span>
+            </div>
+            <div class="bet-total">
+                <span>Dat:</span>
+                <span id="ticket-date">Samdi, 29 Nov - 10:45 AM</span>
+            </div>
+            <div id="ticket-bets-list">
+                <!-- Liste des paris pour la fiche -->
+            </div>
+            <div class="bet-total">
+                <span>Total:</span>
+                <span id="ticket-total">0 goud</span>
+            </div>
+            <div class="ticket-footer">
+                <button class="ticket-footer-btn save-ticket" id="save-ticket-only">Sove Fiche</button>
+                <button class="ticket-footer-btn print-ticket-btn" id="print-ticket-only">Enprime Fiche</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Écran des fiches gagnantes -->
+    <div class="screen" id="winning-tickets-screen">
+        <div class="screen-header">
+            <button class="back-button" data-screen="home">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="screen-title">Fiche Gagnant</h2>
+        </div>
+        
+        <div class="search-history">
+            <input type="text" id="search-winning-tickets" class="search-input" placeholder="Chache fiche...">
+            <button class="search-btn" id="search-winning-btn">
+                <i class="fas fa-search"></i> Chache
+            </button>
+        </div>
+        
+        <div id="winning-tickets-list">
+            <!-- Les fiches gagnantes seront chargées dynamiquement -->
+        </div>
+    </div>
+    
+    <!-- Écran historique -->
+    <div class="screen" id="history-screen">
+        <div class="screen-header">
+            <button class="back-button" data-screen="home">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="screen-title">Istorik Parye</h2>
+        </div>
+        
+        <div class="search-history">
+            <input type="text" id="search-history" class="search-input" placeholder="Chache fiche...">
+            <button class="search-btn" id="search-history-btn">
+                <i class="fas fa-search"></i> Chache
+            </button>
+        </div>
+        
+        <div class="reports-container" id="reports-container">
+            <!-- Les boutons de rapport seront chargés dynamiquement -->
+        </div>
+        
+        <div id="report-results">
+            <!-- Les résultats des rapports seront chargés dynamiquement -->
+        </div>
+        
+        <div id="history-list">
+            <!-- L'historique sera chargé dynamiquement -->
+        </div>
+    </div>
+    
+    <!-- Écran configuration -->
+    <div class="screen" id="config-screen">
+        <div class="screen-header">
+            <button class="back-button" data-screen="home">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="screen-title">Konfigirasyon</h2>
+        </div>
+        
+        <div class="config-section">
+            <div class="section-title">
+                <i class="fas fa-server"></i>
+                <h2>Koneksyon ak Santral</h2>
+            </div>
+            
+            <div class="supabase-config" id="api-config-display">
+                <h4>Konfigirasyon API</h4>
+                <p><small>Konekte ak santral kontwòl la:</small></p>
+                <div class="form-group">
+                    <label for="api-url-text">URL API</label>
+                    <input type="text" id="api-url-text" placeholder="https://nova-lotto.onrender.com/api">
+                </div>
+                <div class="form-actions" style="margin-top: 10px;">
+                    <button class="btn-primary" id="test-api">Tcheke Koneksyon</button>
+                    <button class="submit-bet" id="save-api">Sove Konfigirasyon</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="agent-id">ID Ajan Ou</label>
+                <input type="text" id="agent-id" placeholder="Ajan-001" readonly>
+                <small>ID sa a otomatikman kreye pou aparèy ou</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="logo-url">URL Logo (Opsyonèl)</label>
+                <input type="text" id="logo-url" placeholder="https://example.com/logo.jpg">
+                <button class="btn-secondary" id="update-logo">Mete ajou Logo</button>
+            </div>
+            
+            <div id="connection-status" class="config-status status-disconnected">
+                <i class="fas fa-cloud"></i> Pa Konekte ak Santral
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <div class="section-title">
+                <i class="fas fa-sync-alt"></i>
+                <h2>Synchronizasyon Done</h2>
+            </div>
+            
+            <div class="form-group">
+                <label for="sync-interval">Entèval Synchronizasyon (minit)</label>
+                <input type="number" id="sync-interval" value="5" min="1">
+            </div>
+            
+            <button class="btn-primary" id="sync-now">Synchronize Kounye a</button>
+            
+            <div class="bet-total">
+                <span>Dènye Synchronizasyon:</span>
+                <span id="last-sync">Pa janm</span>
+            </div>
+            
+            <div class="bet-total">
+                <span>Fiche ki poko Synchronize:</span>
+                <span id="pending-sync">0</span>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <div class="section-title">
+                <i class="fas fa-user-shield"></i>
+                <h2>Enfòmasyon Sesyon</h2>
+            </div>
+            
+            <div class="form-group">
+                <label>Kòd Sekirite Ou</label>
+                <input type="text" id="current-code" readonly style="font-family: monospace; font-weight: bold;">
+            </div>
+            
+            <div class="form-group">
+                <label>ID Aparèy Ou</label>
+                <input type="text" id="device-id" readonly style="font-size: 0.9rem;">
+            </div>
+            
+            <button class="submit-bet" id="logout-btn" style="width: 100%; background-color: var(--accent-color);">
+                <i class="fas fa-sign-out-alt"></i> Dekonekte
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration API
+        const API_BASE_URL = localStorage.getItem('novaLottoApiUrl') || 'https://nova-lotto.onrender.com/api';
+        
+        // Données des tirages
+        const draws = {
+            miami: {
+                name: "Miami (Florida)",
+                times: {
+                    morning: "1:30 PM",
+                    evening: "9:50 PM"
+                },
+                date: "Sam, 29 Nov",
+                countdown: "18 h 30 min"
+            },
+            georgia: {
+                name: "Georgia",
+                times: {
+                    morning: "12:30 PM",
+                    evening: "7:00 PM"
+                },
+                date: "Sam, 29 Nov",
+                countdown: "17 h 29 min"
+            },
+            newyork: {
+                name: "New York",
+                times: {
+                    morning: "2:30 PM",
+                    evening: "8:00 PM"
+                },
+                date: "Sam, 29 Nov",
+                countdown: "19 h 30 min"
+            },
+            texas: {
+                name: "Texas",
+                times: {
+                    morning: "12:00 PM",
+                    evening: "6:00 PM"
+                },
+                date: "Sam, 29 Nov",
+                countdown: "18 h 27 min"
+            }
+        };
+        
+        // Types de paris disponibles avec multiplicateurs corrigés
+        const betTypes = {
+            lotto3: {
+                name: "LOTO 3",
+                multiplier: 500,
+                icon: "fas fa-list-ol",
+                description: "3 chif (ex: 123, 456)"
+            },
+            grap: {
+                name: "GRAP",
+                multiplier: 500,
+                icon: "fas fa-chart-line",
+                description: "Grap"
+            },
+            marriage: {
+                name: "MARYAJ",
+                multiplier: 1000,
+                icon: "fas fa-link",
+                description: "Maryaj 2 chif"
+            },
+            borlette: {
+                name: "BORLETTE",
+                multiplier: 60,
+                icon: "fas fa-dice",
+                description: "2 chif (1er lot)"
+            },
+            boulpe: {
+                name: "BOUL PE",
+                multiplier: 60,
+                icon: "fas fa-circle",
+                description: "Boul pe (00-99)"
+            },
+            lotto4: {
+                name: "LOTO 4",
+                multiplier: 5000,
+                icon: "fas fa-list-ol",
+                description: "4 chif (2+2 boules)"
+            },
+            lotto5: {
+                name: "LOTO 5",
+                multiplier: 25000,
+                icon: "fas fa-list-ol",
+                description: "5 chif (3+2 boules)"
+            }
+        };
+        
+        // Variables globales
+        let currentDraw = null;
+        let currentDrawTime = null;
+        let activeBets = [];
+        let ticketNumber = 1;
+        let savedTickets = [];
+        let selectedTerminals = [];
+        let currentSecurityCode = "";
+        let deviceId = "";
+        let agentId = "";
+        let isApiConnected = false;
+        let pendingSync = [];
+        let isOnline = navigator.onLine;
+        let companyLogo = "logo-borlette.jpg";
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mettre à jour l'URL API dans les champs
+            document.getElementById('api-url').value = API_BASE_URL;
+            document.getElementById('api-url-text').value = API_BASE_URL;
+            
+            // Vérifier si l'utilisateur est déjà connecté
+            checkExistingSession();
+            
+            // Mettre à jour l'heure
+            updateCurrentTime();
+            
+            // Charger les données sauvegardées
+            loadSavedData();
+            
+            // Configurer la détection de connexion
+            setupConnectionDetection();
+            
+            // Charger le logo
+            loadLogo();
+            
+            // Ajouter les écouteurs d'événements pour les tirages
+            document.querySelectorAll('.draw-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const drawId = this.getAttribute('data-draw');
+                    openBettingScreen(drawId, 'morning');
+                });
+            });
+            
+            // Ajouter les écouteurs d'événements pour les boutons de tirage
+            document.querySelectorAll('.draw-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = this.closest('.draw-card');
+                    const drawId = card.getAttribute('data-draw');
+                    const time = this.getAttribute('data-time');
+                    
+                    card.querySelectorAll('.draw-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    openBettingScreen(drawId, time);
+                });
+            });
+            
+            // Bouton de retour
+            document.getElementById('back-button').addEventListener('click', closeBettingScreen);
+            
+            // Bouton de soumission de pari
+            document.getElementById('submit-bet').addEventListener('click', submitBets);
+            
+            // Boutons de fiche
+            document.getElementById('save-print-ticket').addEventListener('click', saveAndPrintTicket);
+            document.getElementById('save-ticket-only').addEventListener('click', saveTicket);
+            document.getElementById('print-ticket-only').addEventListener('click', printTicket);
+            
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const screen = this.getAttribute('data-screen');
+                    showScreen(screen);
+                });
+            });
+            
+            // Boutons de retour
+            document.querySelectorAll('.back-button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const screen = this.getAttribute('data-screen') || 'home';
+                    showScreen(screen);
+                });
+            });
+            
+            // Configuration
+            document.getElementById('test-api').addEventListener('click', testApiConnection);
+            document.getElementById('save-api').addEventListener('click', saveApiConfig);
+            document.getElementById('sync-now').addEventListener('click', syncNow);
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            document.getElementById('update-logo').addEventListener('click', updateLogo);
+            
+            // Boutons de recherche
+            document.getElementById('search-history-btn').addEventListener('click', searchHistory);
+            document.getElementById('search-winning-btn').addEventListener('click', searchWinningTickets);
+            
+            // Connexion
+            document.getElementById('login-btn').addEventListener('click', login);
+            document.getElementById('security-code').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+            
+            // Configuration API optionnelle
+            document.getElementById('save-api-config').addEventListener('click', saveApiConfigFromLogin);
+            document.getElementById('toggle-api-config').addEventListener('click', function() {
+                const configSection = document.getElementById('api-config-section');
+                configSection.style.display = configSection.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            // Actualiser périodiquement
+            setInterval(updateCurrentTime, 60000);
+            setInterval(checkPendingSync, 30000);
+        });
+        
+        // Fonctions utilitaires pour l'API
+        async function makeApiRequest(endpoint, method = 'GET', data = null) {
+            const url = `${API_BASE_URL}${endpoint}`;
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(url, options);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur API: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error(`Erreur ${method} ${endpoint}:`, error);
+                throw error;
+            }
+        }
+        
+        // Afficher/masquer le chargement
+        function showLoading(message = "Chargement...") {
+            document.getElementById('loading-message').textContent = message;
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+        
+        // Charger le logo
+        function loadLogo() {
+            const savedLogo = localStorage.getItem('novaLottoLogo');
+            if (savedLogo) {
+                companyLogo = savedLogo;
+            }
+            updateLogoDisplay();
+        }
+        
+        // Mettre à jour l'affichage du logo
+        function updateLogoDisplay() {
+            const logoElements = document.querySelectorAll('#company-logo, #ticket-logo');
+            logoElements.forEach(logo => {
+                logo.src = companyLogo;
+                logo.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YzOWMxMiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Qk9STEVUVEU8L3RleHQ+PC9zdmc+';
+                };
+            });
+        }
+        
+        // Mettre à jour le logo
+        function updateLogo() {
+            const logoUrl = document.getElementById('logo-url').value;
+            if (logoUrl) {
+                companyLogo = logoUrl;
+                localStorage.setItem('novaLottoLogo', logoUrl);
+                updateLogoDisplay();
+                showNotification("Logo mete ajou avèk siksè!", "success");
+            }
+        }
+        
+        // Configurer la détection de connexion
+        function setupConnectionDetection() {
+            window.addEventListener('online', function() {
+                isOnline = true;
+                updateSyncStatus();
+                showNotification("Koneksyon entènèt retabli", "success");
+                checkPendingSync();
+            });
+            
+            window.addEventListener('offline', function() {
+                isOnline = false;
+                updateSyncStatus();
+                showNotification("Pa konekte ak entènèt", "warning");
+            });
+        }
+        
+        // Vérifier la session existante
+        function checkExistingSession() {
+            const savedCode = localStorage.getItem('novaLottoSecurityCode');
+            const savedDeviceId = localStorage.getItem('novaLottoDeviceId');
+            
+            if (savedCode && savedDeviceId) {
+                const storedDeviceId = localStorage.getItem(`novaLottoDevice_${savedCode}`);
+                if (storedDeviceId === savedDeviceId) {
+                    currentSecurityCode = savedCode;
+                    deviceId = savedDeviceId;
+                    agentId = `agent_${deviceId.substring(0, 8)}`;
+                    showMainApp();
+                } else {
+                    showLoginError();
+                }
+            }
+        }
+        
+        // Connexion
+        async function login() {
+            const securityCode = document.getElementById('security-code').value.trim();
+            
+            if (!securityCode) {
+                showLoginError("Tanpri antre kòd sekirite a");
+                return;
+            }
+            
+            deviceId = generateDeviceId();
+            
+            try {
+                showLoading("Koneksyon nan kou...");
+                await verifyCodeWithApi(securityCode, deviceId);
+            } catch (error) {
+                // Si l'API échoue, utiliser les codes par défaut
+                const defaultCodes = ["123456", "admin123", "lottery2024", "1111", "novalotto"];
+                if (defaultCodes.includes(securityCode)) {
+                    const storedDeviceId = localStorage.getItem(`novaLottoDevice_${securityCode}`);
+                    if (storedDeviceId && storedDeviceId !== deviceId) {
+                        showLoginError("Kòd sa a deja itilize sou yon lòt aparèy");
+                        hideLoading();
+                        return;
+                    }
+                    
+                    completeLogin(securityCode, deviceId);
+                    hideLoading();
+                } else {
+                    showLoginError("Kòd sekirite a pa kòrèk");
+                    hideLoading();
+                }
+            }
+        }
+        
+        // Vérifier le code avec l'API
+        async function verifyCodeWithApi(code, deviceId) {
+            try {
+                const response = await makeApiRequest('/login', 'POST', {
+                    code: code,
+                    device_id: deviceId
+                });
+                
+                if (response.success) {
+                    completeLogin(code, deviceId);
+                    hideLoading();
+                    return true;
+                } else {
+                    showLoginError(response.error || "Kòd sekirite a pa kòrèk");
+                    hideLoading();
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error("Erreur vérification code:", error);
+                throw error;
+            }
+        }
+        
+        // Compléter la connexion
+        function completeLogin(securityCode, deviceId) {
+            currentSecurityCode = securityCode;
+            agentId = `agent_${deviceId.substring(0, 8)}`;
+            
+            localStorage.setItem('novaLottoSecurityCode', securityCode);
+            localStorage.setItem('novaLottoDeviceId', deviceId);
+            localStorage.setItem(`novaLottoDevice_${securityCode}`, deviceId);
+            
+            showMainApp();
+            showNotification("Koneksyon reyisi!", "success");
+        }
+        
+        // Afficher l'application principale
+        function showMainApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-container').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'flex';
+            document.getElementById('sync-status').style.display = 'flex';
+            
+            document.getElementById('agent-id').value = agentId;
+            document.getElementById('current-code').value = currentSecurityCode;
+            document.getElementById('device-id').value = deviceId;
+            
+            updateSyncStatus();
+        }
+        
+        // Afficher l'erreur de connexion
+        function showLoginError(message = "Kòd sekirite a pa kòrèk oswa li deja itilize sou yon lòt aparèy.") {
+            document.getElementById('login-error').textContent = message;
+            document.getElementById('login-error').style.display = 'block';
+        }
+        
+        // Déconnexion
+        function logout() {
+            if (!confirm("Èske ou sèten ou vle dekonekte?")) return;
+            
+            localStorage.removeItem('novaLottoSecurityCode');
+            localStorage.removeItem('novaLottoDeviceId');
+            
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('main-container').style.display = 'none';
+            document.getElementById('bottom-nav').style.display = 'none';
+            document.getElementById('sync-status').style.display = 'none';
+            document.getElementById('security-code').value = '';
+            document.getElementById('login-error').style.display = 'none';
+            
+            currentSecurityCode = "";
+            deviceId = "";
+            agentId = "";
+        }
+        
+        // Générer un ID d'appareil unique
+        function generateDeviceId() {
+            let savedDeviceId = localStorage.getItem('novaLottoDeviceId');
+            if (!savedDeviceId) {
+                savedDeviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+            return savedDeviceId;
+        }
+        
+        // Charger les données sauvegardées
+        function loadSavedData() {
+            const savedTicketsData = localStorage.getItem('novaLottoTickets');
+            if (savedTicketsData) {
+                savedTickets = JSON.parse(savedTicketsData);
+            }
+            
+            const savedTicketNumber = localStorage.getItem('novaLottoTicketNumber');
+            if (savedTicketNumber) {
+                ticketNumber = parseInt(savedTicketNumber);
+            }
+            
+            const savedTerminals = localStorage.getItem('novaLottoSelectedTerminals');
+            if (savedTerminals) {
+                selectedTerminals = JSON.parse(savedTerminals);
+            }
+            
+            const savedPendingSync = localStorage.getItem('novaLottoPendingSync');
+            if (savedPendingSync) {
+                pendingSync = JSON.parse(savedPendingSync);
+                updatePendingSyncCount();
+            }
+        }
+        
+        // Mettre à jour l'heure actuelle
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            const dateString = now.toLocaleDateString('fr-FR', options);
+            const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('current-time').textContent = `${dateString} - ${timeString}`;
+            document.getElementById('ticket-date').textContent = `${dateString} - ${timeString}`;
+        }
+        
+        // Mettre à jour le statut de synchronisation
+        function updateSyncStatus() {
+            const syncStatus = document.getElementById('sync-status');
+            const syncText = document.getElementById('sync-text');
+            
+            if (!isOnline) {
+                syncStatus.className = 'sync-status sync-disconnected';
+                syncText.textContent = 'Pa Konekte ak Entènèt';
+                return;
+            }
+            
+            if (isApiConnected) {
+                syncStatus.className = 'sync-status sync-connected';
+                syncText.textContent = 'Konekte ak Santral';
+            } else {
+                syncStatus.className = 'sync-status sync-disconnected';
+                syncText.textContent = 'Pa Konekte ak Santral';
+            }
+            
+            const connectionStatus = document.getElementById('connection-status');
+            if (connectionStatus) {
+                if (isApiConnected && isOnline) {
+                    connectionStatus.className = 'config-status status-connected';
+                    connectionStatus.innerHTML = '<i class="fas fa-cloud"></i> Konekte ak Santral';
+                } else {
+                    connectionStatus.className = 'config-status status-disconnected';
+                    connectionStatus.innerHTML = '<i class="fas fa-cloud"></i> Pa Konekte ak Santral';
+                }
+            }
+        }
+        
+        // Afficher une notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let icon = 'fas fa-info-circle';
+            if (type === 'success') icon = 'fas fa-check-circle';
+            if (type === 'warning') icon = 'fas fa-exclamation-triangle';
+            if (type === 'error') icon = 'fas fa-times-circle';
+            
+            notification.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translate(-50%, 20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        // Afficher un écran spécifique
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen, .betting-screen, .container').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-screen') === screenId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            if (screenId === 'home') {
+                document.querySelector('.container').style.display = 'block';
+            } else {
+                const screen = document.getElementById(screenId + '-screen');
+                if (screen) {
+                    screen.style.display = 'block';
+                    
+                    if (screenId === 'tickets') {
+                        updateTicketScreen();
+                    } else if (screenId === 'history') {
+                        updateHistoryScreen();
+                    } else if (screenId === 'winning-tickets') {
+                        updateWinningTicketsScreen();
+                    } else if (screenId === 'config') {
+                        updateConfigScreen();
+                    }
+                }
+            }
+        }
+        
+        // Mettre à jour l'écran de configuration
+        function updateConfigScreen() {
+            updatePendingSyncCount();
+            
+            const lastSync = localStorage.getItem('novaLottoLastSync');
+            if (lastSync) {
+                document.getElementById('last-sync').textContent = new Date(lastSync).toLocaleString();
+            }
+            
+            document.getElementById('logo-url').value = companyLogo;
+        }
+        
+        // Mettre à jour le compteur de synchronisations en attente
+        function updatePendingSyncCount() {
+            document.getElementById('pending-sync').textContent = pendingSync.length;
+        }
+        
+        // Ouvrir l'écran de pari
+        function openBettingScreen(drawId, time = null) {
+            currentDraw = drawId;
+            currentDrawTime = time;
+            const draw = draws[drawId];
+            
+            let title = draw.name;
+            if (time) {
+                title += ` (${time === 'morning' ? 'Maten' : 'Swè'})`;
+            }
+            document.getElementById('betting-title').textContent = title;
+            
+            const bettingScreen = document.getElementById('betting-screen');
+            bettingScreen.style.display = 'block';
+            bettingScreen.classList.remove('slide-out');
+            bettingScreen.classList.add('slide-in');
+            
+            document.querySelector('.container').style.display = 'none';
+            
+            loadBetTypes();
+            
+            document.getElementById('bet-form').style.display = 'none';
+            document.getElementById('active-bets').style.display = 'none';
+        }
+        
+        // Fermer l'écran de pari
+        function closeBettingScreen() {
+            const bettingScreen = document.getElementById('betting-screen');
+            bettingScreen.classList.remove('slide-in');
+            bettingScreen.classList.add('slide-out');
+            
+            setTimeout(() => {
+                bettingScreen.style.display = 'none';
+                document.querySelector('.container').style.display = 'block';
+                currentDraw = null;
+                currentDrawTime = null;
+                activeBets = [];
+                updateBetsList();
+            }, 300);
+        }
+        
+        // Charger les types de paris
+        function loadBetTypes() {
+            const betTypesContainer = document.getElementById('bet-types-container');
+            betTypesContainer.innerHTML = '';
+            
+            for (const [key, bet] of Object.entries(betTypes)) {
+                const betTypeCard = document.createElement('div');
+                betTypeCard.className = 'bet-type-card';
+                betTypeCard.setAttribute('data-bet', key);
+                betTypeCard.innerHTML = `
+                    <div class="bet-icon">
+                        <i class="${bet.icon}"></i>
+                    </div>
+                    <h3>${bet.name}</h3>
+                    <div class="bet-multiplier">x ${bet.multiplier}</div>
+                `;
+                
+                betTypeCard.addEventListener('click', function() {
+                    showBetForm(key);
+                });
+                
+                betTypesContainer.appendChild(betTypeCard);
+            }
+            
+            document.getElementById('bet-types-container').style.display = 'grid';
+        }
+        
+        // Afficher le formulaire de pari
+        function showBetForm(betType) {
+            const bet = betTypes[betType];
+            
+            document.getElementById('bet-types-container').style.display = 'none';
+            
+            const betForm = document.getElementById('bet-form');
+            betForm.style.display = 'block';
+            
+            let formHTML = '';
+            
+            switch(betType) {
+                case 'lotto3':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <p class="info-text"><small>Chwazi 3 chif (ex: 123, 456, 789)</small></p>
+                        <div class="quick-bet-form">
+                            <input type="text" id="lotto3-number" class="quick-number-input" 
+                                   placeholder="000" maxlength="3" pattern="[0-9]{3}"
+                                   title="Antre 3 chif (0-9)">
+                            <input type="number" id="lotto3-amount" class="quick-amount-input" 
+                                   placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'marriage':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <div class="form-group">
+                            <label>2 Chif yo</label>
+                            <div class="number-inputs">
+                                <input type="text" id="marriage-number1" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                                <input type="text" id="marriage-number2" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                            </div>
+                        </div>
+                        <div class="quick-bet-form">
+                            <input type="number" id="marriage-amount" class="quick-amount-input" placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'borlette':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <div class="quick-bet-form">
+                            <input type="text" id="borlette-number" class="quick-number-input" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                            <input type="number" id="borlette-amount" class="quick-amount-input" placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'boulpe':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <div class="quick-bet-form">
+                            <input type="text" id="boulpe-number" class="quick-number-input" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                            <input type="number" id="boulpe-amount" class="quick-amount-input" placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                        <div class="n-balls-container">
+                            <div class="n-ball" data-number="00">00</div>
+                            <div class="n-ball" data-number="11">11</div>
+                            <div class="n-ball" data-number="22">22</div>
+                            <div class="n-ball" data-number="33">33</div>
+                            <div class="n-ball" data-number="44">44</div>
+                            <div class="n-ball" data-number="55">55</div>
+                            <div class="n-ball" data-number="66">66</div>
+                            <div class="n-ball" data-number="77">77</div>
+                            <div class="n-ball" data-number="88">88</div>
+                            <div class="n-ball" data-number="99">99</div>
+                            <div class="bo-ball" id="bo-all">BO</div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'lotto4':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <p class="info-text"><small>2 boules (2 chif chak) - Tout opsyon koche pa default</small></p>
+                        <div class="form-group">
+                            <label>4 Chif yo (2 boules)</label>
+                            <div class="number-inputs">
+                                <input type="text" id="lotto4-number1" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                                <input type="text" id="lotto4-number2" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                            </div>
+                        </div>
+                        <div class="quick-bet-form">
+                            <input type="number" id="lotto4-amount" class="quick-amount-input" placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="lotto-options">
+                            <div class="multi-option option-default-checked selected" data-option="1">
+                                <input type="checkbox" id="lotto4-option1" checked>
+                                <label for="lotto4-option1">Opsyon 1: 1e boule (1e lot) & 2e boule (2e lot)</label>
+                            </div>
+                            <div class="multi-option option-default-checked selected" data-option="2">
+                                <input type="checkbox" id="lotto4-option2" checked>
+                                <label for="lotto4-option2">Opsyon 2: 1e boule (2e lot) & 2e boule (3e lot)</label>
+                            </div>
+                            <div class="multi-option option-default-checked selected" data-option="3">
+                                <input type="checkbox" id="lotto4-option3" checked>
+                                <label for="lotto4-option3">Opsyon 3: 1e boule (1e/2e/3e lot) & 2e boule (1e/2e/3e lot)</label>
+                            </div>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'lotto5':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <p class="info-text"><small>3+2 boules - Tout opsyon koche pa default</small></p>
+                        <div class="form-group">
+                            <label>5 Chif yo (3+2 boules)</label>
+                            <div class="number-inputs">
+                                <input type="text" id="lotto5-number1" placeholder="000" maxlength="3" pattern="[0-9]{3}">
+                                <input type="text" id="lotto5-number2" placeholder="00" maxlength="2" pattern="[0-9]{2}">
+                            </div>
+                        </div>
+                        <div class="quick-bet-form">
+                            <input type="number" id="lotto5-amount" class="quick-amount-input" placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="lotto-options">
+                            <div class="multi-option option-default-checked selected" data-option="1">
+                                <input type="checkbox" id="lotto5-option1" checked>
+                                <label for="lotto5-option1">Opsyon 1: 1e boule (1e lot) & 2e boule (2e lot)</label>
+                            </div>
+                            <div class="multi-option option-default-checked selected" data-option="2">
+                                <input type="checkbox" id="lotto5-option2" checked>
+                                <label for="lotto5-option2">Opsyon 2: 1e boule (1e lot) & 2e boule (3e lot)</label>
+                            </div>
+                            <div class="multi-option option-default-checked selected" data-option="3">
+                                <input type="checkbox" id="lotto5-option3" checked>
+                                <label for="lotto5-option3">Opsyon 3: 1e boule (1e lot) & 2e boule (2e/3e lot)</label>
+                            </div>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'grap':
+                    formHTML = `
+                        <h3>${bet.name} - ${bet.description}</h3>
+                        <div class="form-group">
+                            <label for="grap-type">Kalite Grap</label>
+                            <select id="grap-type">
+                                <option value="grap2">Grap 2 Chif</option>
+                                <option value="grap3">Grap 3 Chif</option>
+                                <option value="grap4">Grap 4 Chif</option>
+                            </select>
+                        </div>
+                        <div class="quick-bet-form">
+                            <input type="text" id="grap-number" class="quick-number-input" placeholder="Chif yo" maxlength="4">
+                            <input type="number" id="grap-amount" class="quick-amount-input" placeholder="Kantite" min="1">
+                            <button class="btn-primary" id="add-bet">Ajoute</button>
+                        </div>
+                        <div class="bet-actions">
+                            <button class="btn-secondary" id="cancel-bet">Anile</button>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            if (betType === 'borlette' || betType === 'boulpe') {
+                formHTML += `
+                    <div class="n-balls-container">
+                        <div class="n-ball" data-n="0">N0</div>
+                        <div class="n-ball" data-n="1">N1</div>
+                        <div class="n-ball" data-n="2">N2</div>
+                        <div class="n-ball" data-n="3">N3</div>
+                        <div class="n-ball" data-n="4">N4</div>
+                        <div class="n-ball" data-n="5">N5</div>
+                        <div class="n-ball" data-n="6">N6</div>
+                        <div class="n-ball" data-n="7">N7</div>
+                        <div class="n-ball" data-n="8">N8</div>
+                        <div class="n-ball" data-n="9">N9</div>
+                    </div>
+                `;
+            }
+            
+            betForm.innerHTML = formHTML;
+            
+            document.getElementById('add-bet').addEventListener('click', function() {
+                addBet(betType);
+            });
+            
+            document.getElementById('cancel-bet').addEventListener('click', function() {
+                document.getElementById('bet-form').style.display = 'none';
+                document.getElementById('bet-types-container').style.display = 'grid';
+            });
+            
+            if (betType === 'boulpe') {
+                document.querySelectorAll('.n-ball[data-number]').forEach(ball => {
+                    ball.addEventListener('click', function() {
+                        const number = this.getAttribute('data-number');
+                        document.getElementById('boulpe-number').value = number;
+                        document.getElementById('boulpe-amount').focus();
+                    });
+                });
+                
+                document.getElementById('bo-all').addEventListener('click', function() {
+                    const amount = prompt("Kantite pou chak boule pe (00-99):", "1");
+                    if (amount && !isNaN(amount) && amount > 0) {
+                        const numbers = ['00', '11', '22', '33', '44', '55', '66', '77', '88', '99'];
+                        
+                        activeBets.push({
+                            type: betType,
+                            name: 'BOUL PE (Tout)',
+                            number: '00-99',
+                            amount: parseInt(amount) * numbers.length,
+                            multiplier: bet.multiplier,
+                            isGroup: true,
+                            details: numbers.map(n => ({number: n, amount: parseInt(amount)}))
+                        });
+                        
+                        updateBetsList();
+                        showNotification(`${numbers.length} boule pe ajoute avèk siksè!`, "success");
+                    }
+                });
+            }
+            
+            if (betType === 'borlette' || betType === 'boulpe') {
+                document.querySelectorAll('.n-ball[data-n]').forEach(ball => {
+                    ball.addEventListener('click', function() {
+                        const n = this.getAttribute('data-n');
+                        const numbers = [];
+                        for (let i = 0; i <= 9; i++) {
+                            numbers.push(i.toString() + n);
+                        }
+                        
+                        const amount = prompt(`Kantite pou chak boule nan N${n}:`, "1");
+                        if (amount && !isNaN(amount) && amount > 0) {
+                            activeBets.push({
+                                type: betType,
+                                name: `N${n} (Tout)`,
+                                number: `0${n}-9${n}`,
+                                amount: parseInt(amount) * numbers.length,
+                                multiplier: bet.multiplier,
+                                isGroup: true,
+                                details: numbers.map(num => ({number: num, amount: parseInt(amount)}))
+                            });
+                            
+                            updateBetsList();
+                            showNotification(`${numbers.length} boule N${n} ajoute avèk siksè!`, "success");
+                        }
+                    });
+                });
+            }
+            
+            if (betType === 'lotto4' || betType === 'lotto5') {
+                document.querySelectorAll('.multi-option').forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        if (e.target.type === 'checkbox') return;
+                        
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        
+                        if (checkbox.checked) {
+                            this.classList.add('selected');
+                        } else {
+                            this.classList.remove('selected');
+                        }
+                    });
+                    
+                    const checkbox = option.querySelector('input[type="checkbox"]');
+                    checkbox.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (this.checked) {
+                            option.classList.add('selected');
+                        } else {
+                            option.classList.remove('selected');
+                        }
+                    });
+                });
+            }
+            
+            const numberInput = betForm.querySelector('input[type="text"]');
+            if (numberInput) {
+                numberInput.focus();
+                
+                numberInput.addEventListener('input', function() {
+                    const maxLength = parseInt(this.getAttribute('maxlength'));
+                    if (this.value.length === maxLength) {
+                        const nextInput = this.nextElementSibling;
+                        if (nextInput && nextInput.tagName === 'INPUT') {
+                            nextInput.focus();
+                        }
+                    }
+                });
+                
+                numberInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const amountInput = betForm.querySelector('input[type="number"]');
+                        if (amountInput) {
+                            amountInput.focus();
+                        }
+                    }
+                });
+            }
+            
+            const amountInput = betForm.querySelector('input[type="number"]');
+            if (amountInput) {
+                amountInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addBet(betType);
+                    }
+                });
+            }
+            
+            document.getElementById('active-bets').style.display = 'block';
+        }
+        
+        // Ajouter un pari
+        function addBet(betType) {
+            const bet = betTypes[betType];
+            let number, amount, options = [];
+            
+            switch(betType) {
+                case 'lotto3':
+                    number = document.getElementById('lotto3-number').value;
+                    amount = parseInt(document.getElementById('lotto3-amount').value);
+                    
+                    if (!/^\d{3}$/.test(number)) {
+                        showNotification("Lotto 3 dwe gen 3 chif egzat (0-9)", "warning");
+                        return;
+                    }
+                    break;
+                    
+                case 'marriage':
+                    const num1 = document.getElementById('marriage-number1').value;
+                    const num2 = document.getElementById('marriage-number2').value;
+                    number = `${num1}*${num2}`;
+                    amount = parseInt(document.getElementById('marriage-amount').value);
+                    
+                    if (!/^\d{2}$/.test(num1) || !/^\d{2}$/.test(num2)) {
+                        showNotification("Chak chif maryaj dwe gen 2 chif", "warning");
+                        return;
+                    }
+                    break;
+                    
+                case 'borlette':
+                    number = document.getElementById('borlette-number').value;
+                    amount = parseInt(document.getElementById('borlette-amount').value);
+                    
+                    if (!/^\d{2}$/.test(number)) {
+                        showNotification("Borlette dwe gen 2 chif", "warning");
+                        return;
+                    }
+                    break;
+                    
+                case 'boulpe':
+                    number = document.getElementById('boulpe-number').value;
+                    amount = parseInt(document.getElementById('boulpe-amount').value);
+                    
+                    if (!/^\d{2}$/.test(number)) {
+                        showNotification("Boul pe dwe gen 2 chif", "warning");
+                        return;
+                    }
+                    
+                    if (number.length === 2 && number[0] === number[1]) {
+                        // C'est une boule paire
+                    } else {
+                        showNotification("Pou boul pe, fòk de chif yo menm! (ex: 00, 11, 22)", "warning");
+                        return;
+                    }
+                    break;
+                    
+                case 'lotto4':
+                    const num4_1 = document.getElementById('lotto4-number1').value;
+                    const num4_2 = document.getElementById('lotto4-number2').value;
+                    number = `${num4_1}*${num4_2}`;
+                    amount = parseInt(document.getElementById('lotto4-amount').value);
+                    
+                    if (!/^\d{2}$/.test(num4_1) || !/^\d{2}$/.test(num4_2)) {
+                        showNotification("Chak boule Lotto 4 dwe gen 2 chif", "warning");
+                        return;
+                    }
+                    
+                    if (document.getElementById('lotto4-option1') && document.getElementById('lotto4-option1').checked) {
+                        options.push('1');
+                    }
+                    if (document.getElementById('lotto4-option2') && document.getElementById('lotto4-option2').checked) {
+                        options.push('2');
+                    }
+                    if (document.getElementById('lotto4-option3') && document.getElementById('lotto4-option3').checked) {
+                        options.push('3');
+                    }
+                    
+                    if (options.length === 0) {
+                        showNotification("Tanpri chwazi omwen yon opsyon pou Lotto 4", "warning");
+                        return;
+                    }
+                    
+                    options.forEach(option => {
+                        activeBets.push({
+                            type: betType,
+                            name: bet.name,
+                            number: `${num4_1}*${num4_2} (Opt ${option})`,
+                            amount: amount,
+                            multiplier: bet.multiplier
+                        });
+                    });
+                    
+                    updateBetsList();
+                    showNotification(`${options.length} parye Lotto 4 ajoute avèk siksè!`, "success");
+                    
+                    document.getElementById('bet-form').style.display = 'none';
+                    document.getElementById('bet-types-container').style.display = 'grid';
+                    return;
+                    
+                case 'lotto5':
+                    const num5_1 = document.getElementById('lotto5-number1').value;
+                    const num5_2 = document.getElementById('lotto5-number2').value;
+                    number = `${num5_1}*${num5_2}`;
+                    amount = parseInt(document.getElementById('lotto5-amount').value);
+                    
+                    if (!/^\d{3}$/.test(num5_1) || !/^\d{2}$/.test(num5_2)) {
+                        showNotification("Lotto 5: Premye boule 3 chif, Dezyèm boule 2 chif", "warning");
+                        return;
+                    }
+                    
+                    if (document.getElementById('lotto5-option1') && document.getElementById('lotto5-option1').checked) {
+                        options.push('1');
+                    }
+                    if (document.getElementById('lotto5-option2') && document.getElementById('lotto5-option2').checked) {
+                        options.push('2');
+                    }
+                    if (document.getElementById('lotto5-option3') && document.getElementById('lotto5-option3').checked) {
+                        options.push('3');
+                    }
+                    
+                    if (options.length === 0) {
+                        showNotification("Tanpri chwazi omwen yon opsyon pou Lotto 5", "warning");
+                        return;
+                    }
+                    
+                    options.forEach(option => {
+                        activeBets.push({
+                            type: betType,
+                            name: bet.name,
+                            number: `${num5_1}*${num5_2} (Opt ${option})`,
+                            amount: amount,
+                            multiplier: bet.multiplier
+                        });
+                    });
+                    
+                    updateBetsList();
+                    showNotification(`${options.length} parye Lotto 5 ajoute avèk siksè!`, "success");
+                    
+                    document.getElementById('bet-form').style.display = 'none';
+                    document.getElementById('bet-types-container').style.display = 'grid';
+                    return;
+                    
+                case 'grap':
+                    const grapType = document.getElementById('grap-type').value;
+                    number = document.getElementById('grap-number').value;
+                    amount = parseInt(document.getElementById('grap-amount').value);
+                    
+                    const grapLength = {
+                        'grap2': 2,
+                        'grap3': 3,
+                        'grap4': 4
+                    };
+                    
+                    const expectedLength = grapLength[grapType];
+                    if (!number || number.length !== expectedLength || !/^\d+$/.test(number)) {
+                        showNotification(`Grap ${expectedLength} chif dwe gen ${expectedLength} chif`, "warning");
+                        return;
+                    }
+                    
+                    number = `${grapType}-${number}`;
+                    break;
+            }
+            
+            if (!number || isNaN(amount) || amount <= 0) {
+                showNotification("Tanpri rantre yon nimewo ak yon kantite valab", "warning");
+                return;
+            }
+            
+            activeBets.push({
+                type: betType,
+                name: bet.name,
+                number: number,
+                amount: amount,
+                multiplier: bet.multiplier
+            });
+            
+            updateBetsList();
+            
+            document.getElementById('bet-form').style.display = 'none';
+            document.getElementById('bet-types-container').style.display = 'grid';
+            
+            showNotification("Parye ajoute avèk siksè!", "success");
+        }
+        
+        // Mettre à jour la liste des paris
+        function updateBetsList() {
+            const betsList = document.getElementById('bets-list');
+            const betTotal = document.getElementById('bet-total');
+            
+            betsList.innerHTML = '';
+            
+            if (activeBets.length === 0) {
+                betsList.innerHTML = '<p>Pa gen okenn parye aktif.</p>';
+                betTotal.textContent = '0 goud';
+                return;
+            }
+            
+            const groupedBets = {};
+            
+            activeBets.forEach((bet, index) => {
+                const key = `${bet.type}_${bet.number}`;
+                
+                if (!groupedBets[key]) {
+                    groupedBets[key] = {
+                        bet: bet,
+                        count: 1,
+                        totalAmount: bet.amount,
+                        indexes: [index]
+                    };
+                } else {
+                    groupedBets[key].count++;
+                    groupedBets[key].totalAmount += bet.amount;
+                    groupedBets[key].indexes.push(index);
+                }
+            });
+            
+            for (const key in groupedBets) {
+                const group = groupedBets[key];
+                const bet = group.bet;
+                
+                const betItem = document.createElement('div');
+                betItem.className = 'bet-item';
+                
+                if (bet.isGroup) {
+                    betItem.innerHTML = `
+                        <div class="bet-details">
+                            <strong>${bet.name}</strong><br>
+                            ${bet.number} (${bet.details.length} parye)
+                        </div>
+                        <div class="bet-amount">
+                            ${group.totalAmount} goud
+                            <span class="bet-remove" data-indexes="${group.indexes.join(',')}"><i class="fas fa-times"></i></span>
+                        </div>
+                    `;
+                } else {
+                    betItem.innerHTML = `
+                        <div class="bet-details">
+                            <strong>${bet.name}</strong><br>
+                            ${bet.number}
+                        </div>
+                        <div class="bet-amount">
+                            ${group.totalAmount} goud
+                            <span class="bet-remove" data-indexes="${group.indexes.join(',')}"><i class="fas fa-times"></i></span>
+                        </div>
+                    `;
+                }
+                
+                betsList.appendChild(betItem);
+                
+                betItem.querySelector('.bet-remove').addEventListener('click', function() {
+                    const indexes = this.getAttribute('data-indexes').split(',').map(Number);
+                    
+                    indexes.sort((a, b) => b - a).forEach(index => {
+                        activeBets.splice(index, 1);
+                    });
+                    
+                    updateBetsList();
+                });
+            }
+            
+            const total = activeBets.reduce((sum, bet) => sum + bet.amount, 0);
+            betTotal.textContent = `${total} goud`;
+        }
+        
+        // Sauvegarder et imprimer la fiche
+        async function saveAndPrintTicket() {
+            if (activeBets.length === 0) {
+                showNotification("Pa gen okenn parye pou sove nan fiche a", "warning");
+                return;
+            }
+            
+            await saveTicket();
+            
+            setTimeout(() => {
+                printTicket();
+            }, 100);
+        }
+        
+        // Sauvegarder la fiche
+        async function saveTicket() {
+            if (activeBets.length === 0) {
+                showNotification("Pa gen okenn parye pou sove nan fiche a", "warning");
+                return;
+            }
+            
+            const ticket = {
+                id: Date.now(),
+                number: ticketNumber,
+                date: new Date().toISOString(),
+                draw: currentDraw,
+                drawTime: currentDrawTime,
+                bets: [...activeBets],
+                total: activeBets.reduce((sum, bet) => sum + bet.amount, 0),
+                agentId: agentId,
+                deviceId: deviceId,
+                securityCode: currentSecurityCode
+            };
+            
+            savedTickets.push(ticket);
+            
+            localStorage.setItem('novaLottoTickets', JSON.stringify(savedTickets));
+            localStorage.setItem('novaLottoTicketNumber', (ticketNumber + 1).toString());
+            
+            pendingSync.push(ticket);
+            localStorage.setItem('novaLottoPendingSync', JSON.stringify(pendingSync));
+            updatePendingSyncCount();
+            
+            await sendTicketToApi(ticket);
+            
+            ticketNumber++;
+            
+            showNotification("Fiche sove avèk siksè!", "success");
+            
+            activeBets = [];
+            updateBetsList();
+        }
+        
+        // Envoyer la fiche à l'API
+        async function sendTicketToApi(ticket) {
+            if (!isOnline) {
+                return;
+            }
+            
+            try {
+                const response = await makeApiRequest('/tickets', 'POST', {
+                    ticket_number: ticket.number,
+                    device_id: ticket.deviceId,
+                    agent_id: ticket.agentId,
+                    draw: ticket.draw,
+                    draw_time: ticket.drawTime,
+                    bets: ticket.bets,
+                    total: ticket.total
+                });
+                
+                if (response.success) {
+                    pendingSync = pendingSync.filter(t => t.id !== ticket.id);
+                    localStorage.setItem('novaLottoPendingSync', JSON.stringify(pendingSync));
+                    updatePendingSyncCount();
+                    
+                    localStorage.setItem('novaLottoLastSync', new Date().toISOString());
+                    
+                    isApiConnected = true;
+                    updateSyncStatus();
+                    
+                    showNotification("Fiche voye bay santral la", "success");
+                }
+                
+            } catch (error) {
+                console.error("Erreur envoi fiche:", error);
+                isApiConnected = false;
+                updateSyncStatus();
+            }
+        }
+        
+        // Vérifier et envoyer les synchronisations en attente
+        async function checkPendingSync() {
+            if (!isOnline || pendingSync.length === 0) {
+                return;
+            }
+            
+            showNotification("Synchronizasyon done an kou...", "info");
+            
+            const ticketsToSync = [...pendingSync];
+            let successCount = 0;
+            
+            for (const ticket of ticketsToSync) {
+                try {
+                    await sendTicketToApi(ticket);
+                    successCount++;
+                } catch (error) {
+                    console.error("Erreur synchronisation fiche:", error);
+                }
+            }
+            
+            if (successCount > 0) {
+                showNotification(`${successCount} fiche synchronize ak santral la`, "success");
+                localStorage.setItem('novaLottoLastSync', new Date().toISOString());
+                document.getElementById('last-sync').textContent = new Date().toLocaleString();
+            }
+        }
+        
+        // Synchroniser maintenant
+        async function syncNow() {
+            await checkPendingSync();
+        }
+        
+        // Tester la connexion API
+        async function testApiConnection() {
+            const apiUrl = document.getElementById('api-url-text').value;
+            
+            if (!apiUrl) {
+                showNotification("Tanpri antre URL API a", "warning");
+                return;
+            }
+            
+            try {
+                showLoading("Tcheke koneksyon an...");
+                const response = await fetch(`${apiUrl}/health`);
+                const data = await response.json();
+                
+                hideLoading();
+                if (response.ok) {
+                    showNotification("Koneksyon API teste avèk siksè!", "success");
+                    isApiConnected = true;
+                    updateSyncStatus();
+                } else {
+                    showNotification("Erè koneksyon API", "error");
+                }
+                
+            } catch (error) {
+                hideLoading();
+                showNotification("Erè koneksyon API: " + error.message, "error");
+            }
+        }
+        
+        // Sauvegarder la configuration API
+        async function saveApiConfig() {
+            const apiUrl = document.getElementById('api-url-text').value;
+            
+            if (!apiUrl) {
+                showNotification("Tanpri antre URL API a", "warning");
+                return;
+            }
+            
+            localStorage.setItem('novaLottoApiUrl', apiUrl);
+            API_BASE_URL = apiUrl;
+            
+            showNotification("Konfigirasyon API sove avèk siksè!", "success");
+        }
+        
+        // Sauvegarder la configuration API depuis l'écran de login
+        function saveApiConfigFromLogin() {
+            const apiUrl = document.getElementById('api-url').value;
+            
+            if (!apiUrl) {
+                showNotification("Tanpri antre URL API a", "warning");
+                return;
+            }
+            
+            localStorage.setItem('novaLottoApiUrl', apiUrl);
+            API_BASE_URL = apiUrl;
+            
+            showNotification("Konfigirasyon API sove avèk siksè!", "success");
+            document.getElementById('api-config-section').style.display = 'none';
+        }
+        
+        // Mettre à jour l'écran des fiches
+        function updateTicketScreen() {
+            const ticketNumberElem = document.getElementById('ticket-number');
+            const ticketBetsList = document.getElementById('ticket-bets-list');
+            const ticketTotal = document.getElementById('ticket-total');
+            
+            ticketNumberElem.textContent = '#' + String(ticketNumber).padStart(6, '0');
+            
+            ticketBetsList.innerHTML = '';
+            
+            if (activeBets.length === 0) {
+                ticketBetsList.innerHTML = '<p>Pa gen okenn parye nan fiche a.</p>';
+                ticketTotal.textContent = '0 goud';
+                return;
+            }
+            
+            const groupedBets = groupBetsByType(activeBets);
+            
+            for (const [type, bets] of Object.entries(groupedBets)) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'grouped-bets';
+                
+                let groupHTML = `<div class="group-header">${type}</div>`;
+                groupHTML += '<div class="group-items">';
+                
+                bets.forEach(bet => {
+                    groupHTML += `<div class="group-item">${bet.number}<br><small>${bet.amount} G</small></div>`;
+                });
+                
+                groupHTML += '</div>';
+                groupDiv.innerHTML = groupHTML;
+                ticketBetsList.appendChild(groupDiv);
+            }
+            
+            const total = activeBets.reduce((sum, bet) => sum + bet.amount, 0);
+            ticketTotal.textContent = `${total} goud`;
+        }
+        
+        // Grouper les paris par type
+        function groupBetsByType(bets) {
+            const grouped = {};
+            
+            bets.forEach(bet => {
+                if (!grouped[bet.name]) {
+                    grouped[bet.name] = [];
+                }
+                
+                if (bet.type === 'boulpe') {
+                    const existingBet = grouped[bet.name].find(b => b.number === bet.number);
+                    if (existingBet) {
+                        existingBet.amount += bet.amount;
+                    } else {
+                        grouped[bet.name].push({...bet});
+                    }
+                } else {
+                    grouped[bet.name].push({...bet});
+                }
+            });
+            
+            return grouped;
+        }
+        
+        // Imprimer la fiche
+        function printTicket() {
+            const lastTicket = savedTickets[savedTickets.length - 1];
+            
+            if (!lastTicket) {
+                showNotification("Pa gen fiche ki sove pou enprime.", "warning");
+                return;
+            }
+
+            const printContent = document.createElement('div');
+            printContent.className = 'print-ticket';
+            
+            const groupedBets = groupBetsByType(lastTicket.bets);
+            
+            let betsHTML = '';
+            let total = 0;
+            
+            for (const [type, bets] of Object.entries(groupedBets)) {
+                betsHTML += `
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">${type}</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                `;
+                
+                bets.forEach(bet => {
+                    betsHTML += `
+                        <div style="background: #f0f0f0; padding: 5px 10px; border-radius: 4px; font-size: 0.9rem;">
+                            ${bet.number}<br>
+                            <strong>${bet.amount} G</strong>
+                        </div>
+                    `;
+                    total += bet.amount;
+                });
+                
+                betsHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            printContent.innerHTML = `
+                <div style="text-align: center; padding: 20px; border: 2px solid #000; font-family: Arial, sans-serif;">
+                    <div style="margin-bottom: 15px;">
+                        <img src="${companyLogo}" alt="Logo Nova Lotto" class="ticket-logo" style="max-width: 80px; height: auto;">
+                    </div>
+                    <h2>Nova Lotto</h2>
+                    <p>Fiche Parye</p>
+                    <p><strong>Nimewo:</strong> #${String(lastTicket.number).padStart(6, '0')}</p>
+                    <p><strong>Dat:</strong> ${new Date(lastTicket.date).toLocaleString('fr-FR')}</p>
+                    <p><strong>Tiraj:</strong> ${draws[lastTicket.draw].name} (${lastTicket.drawTime === 'morning' ? 'Maten' : 'Swè'})</p>
+                    <hr>
+                    <div style="margin: 15px 0;">
+                        ${betsHTML}
+                    </div>
+                    <hr>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px; font-weight: bold; font-size: 1.1rem;">
+                        <span>Total:</span>
+                        <span>${total} goud</span>
+                    </div>
+                    <p style="margin-top: 20px;">Mèsi pou konfyans ou!</p>
+                </div>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Fiche Nova Lotto</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                            @media print {
+                                body { margin: 0; padding: 0; }
+                                @page { margin: 0; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent.innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        // Soumettre les paris
+        function submitBets() {
+            if (activeBets.length === 0) {
+                showNotification("Pa gen okenn parye pou soumèt", "warning");
+                return;
+            }
+            
+            let drawInfo = draws[currentDraw].name;
+            if (currentDrawTime) {
+                drawInfo += ` (${currentDrawTime === 'morning' ? 'Maten' : 'Swè'})`;
+            }
+            
+            showNotification(`${activeBets.length} parye soumèt avèk siksè pou ${drawInfo}!`, "success");
+            
+            saveBetsToHistory();
+            
+            activeBets = [];
+            updateBetsList();
+            closeBettingScreen();
+        }
+        
+        // Enregistrer les paris dans l'historique
+        function saveBetsToHistory() {
+            let history = JSON.parse(localStorage.getItem('novaLottoHistory')) || [];
+            
+            const record = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                draw: currentDraw,
+                drawTime: currentDrawTime,
+                bets: [...activeBets],
+                total: activeBets.reduce((sum, bet) => sum + bet.amount, 0)
+            };
+            
+            history.push(record);
+            
+            localStorage.setItem('novaLottoHistory', JSON.stringify(history));
+        }
+        
+        // Mettre à jour l'écran des fiches gagnantes
+        function updateWinningTicketsScreen() {
+            const winningTicketsList = document.getElementById('winning-tickets-list');
+            
+            const winningTickets = savedTickets.filter(ticket => {
+                return Math.random() < 0.3;
+            });
+            
+            winningTicketsList.innerHTML = '';
+            
+            if (winningTickets.length === 0) {
+                winningTicketsList.innerHTML = '<p>Pa gen fiche gagnant pou montre.</p>';
+                return;
+            }
+            
+            winningTickets.forEach(ticket => {
+                const ticketItem = document.createElement('div');
+                ticketItem.className = 'history-item';
+                
+                let betsHTML = '';
+                ticket.bets.forEach(bet => {
+                    const isWinning = Math.random() < 0.5;
+                    const winClass = isWinning ? 'style="color: var(--success-color); font-weight: bold;"' : '';
+                    
+                    betsHTML += `
+                        <div class="history-bet">
+                            <span>${bet.name}: ${bet.number}</span>
+                            <span ${winClass}>${isWinning ? 'GANYEN' : 'PEDI'}</span>
+                        </div>
+                    `;
+                });
+                
+                ticketItem.innerHTML = `
+                    <div class="history-header">
+                        <span class="history-draw">Fiche #${String(ticket.number).padStart(6, '0')}</span>
+                        <span class="history-date">${new Date(ticket.date).toLocaleString()}</span>
+                    </div>
+                    <div class="history-bets">
+                        ${betsHTML}
+                    </div>
+                    <div class="history-total">
+                        <span>Total:</span>
+                        <span>${ticket.total} G</span>
+                    </div>
+                `;
+                
+                winningTicketsList.appendChild(ticketItem);
+            });
+        }
+        
+        // Rechercher dans l'historique
+        function searchHistory() {
+            const searchTerm = document.getElementById('search-history').value.toLowerCase();
+            const historyItems = document.querySelectorAll('#history-list .history-item');
+            
+            historyItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Rechercher dans les fiches gagnantes
+        function searchWinningTickets() {
+            const searchTerm = document.getElementById('search-winning-tickets').value.toLowerCase();
+            const winningItems = document.querySelectorAll('#winning-tickets-list .history-item');
+            
+            winningItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Mettre à jour l'écran historique
+        function updateHistoryScreen() {
+            const reportsContainer = document.getElementById('reports-container');
+            const historyList = document.getElementById('history-list');
+            
+            reportsContainer.innerHTML = '';
+            
+            const generalBtn = document.createElement('button');
+            generalBtn.className = 'report-btn general';
+            generalBtn.textContent = 'Rapò Jeneral';
+            generalBtn.addEventListener('click', function() {
+                generateGeneralReport();
+            });
+            reportsContainer.appendChild(generalBtn);
+            
+            for (const [drawId, draw] of Object.entries(draws)) {
+                const morningBtn = document.createElement('button');
+                morningBtn.className = 'report-btn';
+                morningBtn.textContent = `${draw.name} Midi`;
+                morningBtn.addEventListener('click', function() {
+                    generateDrawReport(drawId, 'morning');
+                });
+                reportsContainer.appendChild(morningBtn);
+                
+                const eveningBtn = document.createElement('button');
+                eveningBtn.className = 'report-btn';
+                eveningBtn.textContent = `${draw.name} Swè`;
+                eveningBtn.addEventListener('click', function() {
+                    generateDrawReport(drawId, 'evening');
+                });
+                reportsContainer.appendChild(eveningBtn);
+            }
+            
+            historyList.innerHTML = '';
+            
+            if (savedTickets.length === 0) {
+                historyList.innerHTML = '<p>Pa gen fiche ki sove.</p>';
+                return;
+            }
+            
+            const sortedTickets = [...savedTickets].sort((a, b) => b.id - a.id);
+            
+            sortedTickets.forEach(ticket => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                const groupedBets = groupBetsByType(ticket.bets);
+                let betsHTML = '';
+                
+                for (const [type, bets] of Object.entries(groupedBets)) {
+                    betsHTML += `<div style="margin-bottom: 8px;"><strong>${type}:</strong> `;
+                    const betStrings = bets.map(bet => `${bet.number} (${bet.amount} G)`);
+                    betsHTML += betStrings.join(', ') + '</div>';
+                }
+                
+                historyItem.innerHTML = `
+                    <div class="history-header">
+                        <span class="history-draw">${draws[ticket.draw].name} (${ticket.drawTime === 'morning' ? 'Maten' : 'Swè'})</span>
+                        <span class="history-date">${new Date(ticket.date).toLocaleString()}</span>
+                    </div>
+                    <div class="history-bets">
+                        ${betsHTML}
+                    </div>
+                    <div class="history-total">
+                        <span>Total:</span>
+                        <span>${ticket.total} G</span>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Générer un rapport général
+        function generateGeneralReport() {
+            const reportResults = document.getElementById('report-results');
+            
+            let totalTickets = 0;
+            let totalBets = 0;
+            let totalAmount = 0;
+            let drawsCount = {};
+            
+            savedTickets.forEach(ticket => {
+                totalTickets++;
+                totalBets += ticket.bets.length;
+                totalAmount += ticket.total;
+                
+                const drawKey = `${ticket.draw}-${ticket.drawTime}`;
+                if (!drawsCount[drawKey]) {
+                    drawsCount[drawKey] = 0;
+                }
+                drawsCount[drawKey] += ticket.total;
+            });
+            
+            reportResults.innerHTML = `
+                <div class="report-results">
+                    <h3>Rapò Jeneral</h3>
+                    <div class="report-item">
+                        <span>Fiche Total:</span>
+                        <span>${totalTickets}</span>
+                    </div>
+                    <div class="report-item">
+                        <span>Parye Total:</span>
+                        <span>${totalBets}</span>
+                    </div>
+                    <div class="report-item">
+                        <span>Kantite Total:</span>
+                        <span>${totalAmount} G</span>
+                    </div>
+                    <div class="report-item">
+                        <span>Kantite Mwayèn pa Fiche:</span>
+                        <span>${totalTickets > 0 ? Math.round(totalAmount / totalTickets) : 0} G</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Générer un rapport pour un tirage spécifique
+        function generateDrawReport(drawId, time) {
+            const reportResults = document.getElementById('report-results');
+            
+            let totalTickets = 0;
+            let totalBets = 0;
+            let totalAmount = 0;
+            
+            savedTickets.forEach(ticket => {
+                if (ticket.draw === drawId && ticket.drawTime === time) {
+                    totalTickets++;
+                    totalBets += ticket.bets.length;
+                    totalAmount += ticket.total;
+                }
+            });
+            
+            const drawName = draws[drawId].name;
+            const timeName = time === 'morning' ? 'Midi' : 'Swè';
+            
+            reportResults.innerHTML = `
+                <div class="report-results">
+                    <h3>Rapò ${drawName} ${timeName}</h3>
+                    <div class="report-item">
+                        <span>Fiche Total:</span>
+                        <span>${totalTickets}</span>
+                    </div>
+                    <div class="report-item">
+                        <span>Parye Total:</span>
+                        <span>${totalBets}</span>
+                    </div>
+                    <div class="report-item">
+                        <span>Kantite Total:</span>
+                        <span>${totalAmount} G</span>
+                    </div>
+                    <div class="report-item">
+                        <span>Kantite Mwayèn pa Fiche:</span>
+                        <span>${totalTickets > 0 ? Math.round(totalAmount / totalTickets) : 0} G</span>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
