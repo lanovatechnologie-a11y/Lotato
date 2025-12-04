@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: nova-lotto
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: postgresql://postgres:%5BMyster44%5D@db.fpekfulgjuycwzybiznt.supabase.co:5432/postgres?sslmode=require
+      - key: PORT
+        value: 10000
