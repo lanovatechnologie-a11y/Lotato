@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Lotto - Connexion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50, #1a2530);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .login-logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .login-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .login-body {
+            padding: 30px 25px;
+        }
+        
+        .login-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .login-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .login-tab.active {
+            color: var(--primary-color);
+        }
+        
+        .login-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(135deg, #2980b9, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .login-footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .login-help {
+            margin-top: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-dot.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .status-dot.danger {
+            background-color: var(--danger-color);
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 100%;
+            }
+            
+            .login-body {
+                padding: 20px 15px;
+            }
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .subdomain-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .subdomain-label {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .subdomain-value {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">
+                <i class="fas fa-dice"></i>
+            </div>
+            <div class="login-title">NOVA LOTTO</div>
+            <div class="login-subtitle">Système de gestion multi-niveaux</div>
+        </div>
+        
+        <div class="login-body">
+            <div class="error-message" id="error-message"></div>
+            
+            <!-- Détection automatique du type de connexion -->
+            <div class="subdomain-info" id="auto-detect-info" style="display: none;">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <div class="subdomain-label">Mode détecté:</div>
+                    <div class="subdomain-value" id="detected-mode">Agent</div>
+                </div>
+            </div>
+            
+            <!-- Agent Login -->
+            <div class="tab-content active" id="agent-tab">
+                <div class="form-group">
+                    <label class="form-label">Identifiant Agent</label>
+                    <input type="text" class="form-control" id="agent-username" placeholder="votre.identifiant" autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="agent-password" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="toggle-password" data-target="agent-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="login-btn" id="agent-login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Connexion Agent
+                </button>
+            </div>
+            
+            <!-- Supervisor Login -->
+            <div class="tab-content" id="supervisor-tab">
+                <div class="form-group">
+                    <label class="form-label">Niveau de supervision</label>
+                    <select class="form-select" id="supervisor-level">
+                        <option value="1">Niveau 1 - Validation</option>
+                        <option value="2">Niveau 2 - Gestion</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Identifiant Superviseur</label>
+                    <input type="text" class="form-control" id="supervisor-username" placeholder="superviseur">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="supervisor-password" placeholder="••••••••">
+                        <button type="button" class="toggle-password" data-target="supervisor-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="login-btn" id="supervisor-login-btn">
+                    <i class="fas fa-shield-alt"></i> Connexion Superviseur
+                </button>
+            </div>
+            
+            <!-- Subsystem Admin Login -->
+            <div class="tab-content" id="subsystem-tab">
+                <div class="form-group">
+                    <label class="form-label">Identifiant Administrateur</label>
+                    <input type="text" class="form-control" id="subsystem-username" placeholder="admin">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="subsystem-password" placeholder="••••••••">
+                        <button type="button" class="toggle-password" data-target="subsystem-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="login-btn" id="subsystem-login-btn">
+                    <i class="fas fa-building"></i> Connexion Admin Sous-Système
+                </button>
+            </div>
+            
+            <!-- Master Admin Login -->
+            <div class="tab-content" id="master-tab">
+                <div class="form-group">
+                    <label class="form-label">Identifiant Master</label>
+                    <input type="text" class="form-control" id="master-username" placeholder="master">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mot de passe Master</label>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="master-password" placeholder="••••••••">
+                        <button type="button" class="toggle-password" data-target="master-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="login-btn" id="master-login-btn">
+                    <i class="fas fa-crown"></i> Connexion Master
+                </button>
+            </div>
+            
+            <div class="login-tabs">
+                <button class="login-tab active" data-tab="agent">Agent</button>
+                <button class="login-tab" data-tab="supervisor">Superviseur</button>
+                <button class="login-tab" data-tab="subsystem">Admin Sous-Système</button>
+                <button class="login-tab" data-tab="master">Master</button>
+            </div>
+            
+            <div class="login-footer">
+                <div class="system-status">
+                    <div class="status-dot" id="system-status"></div>
+                    <span id="status-text">Système opérationnel</span>
+                </div>
+                <div class="login-help">
+                    En cas de problème, contactez le support technique
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const API_BASE_URL = window.location.origin;
+        
+        // Détecter automatiquement le type de connexion
+        const detectConnectionType = () => {
+            const hostname = window.location.hostname;
+            const pathname = window.location.pathname;
+            
+            console.log('Hostname:', hostname);
+            console.log('Pathname:', pathname);
+            
+            // Si on accède directement à un fichier spécifique
+            if (pathname.includes('master-dashboard')) {
+                return 'master';
+            } else if (pathname.includes('subsystem-admin')) {
+                return 'subsystem';
+            } else if (pathname.includes('control-level')) {
+                return 'supervisor';
+            } else if (pathname.includes('index.html') || pathname === '/') {
+                return 'agent';
+            }
+            
+            // Détection par sous-domaine
+            if (hostname.includes('master.')) {
+                return 'master';
+            } else if (hostname.includes('admin.')) {
+                return 'subsystem';
+            } else if (hostname !== 'localhost' && hostname.split('.').length > 2) {
+                // Sous-domaine personnalisé = sous-système
+                return 'agent';
+            }
+            
+            // Par défaut
+            return 'agent';
+        };
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔑 Page de connexion initialisée');
+            
+            // Détection automatique
+            const detectedType = detectConnectionType();
+            console.log('Type détecté:', detectedType);
+            
+            // Afficher l'info de détection si nécessaire
+            if (detectedType !== 'agent') {
+                const modeNames = {
+                    'master': 'Administrateur Master',
+                    'subsystem': 'Administrateur Sous-Système',
+                    'supervisor': 'Superviseur',
+                    'agent': 'Agent'
+                };
+                
+                document.getElementById('auto-detect-info').style.display = 'flex';
+                document.getElementById('detected-mode').textContent = modeNames[detectedType];
+                
+                // Sélectionner automatiquement le bon tab
+                switchTab(detectedType);
+            }
+            
+            // Configurer les événements
+            setupEventListeners();
+            
+            // Vérifier le statut du système
+            checkSystemStatus();
+        });
+        
+        // Configurer les événements
+        function setupEventListeners() {
+            // Tabs
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Toggle password visibility
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.className = 'fas fa-eye-slash';
+                    } else {
+                        input.type = 'password';
+                        icon.className = 'fas fa-eye';
+                    }
+                });
+            });
+            
+            // Connexion Agent
+            document.getElementById('agent-login-btn').addEventListener('click', agentLogin);
+            document.getElementById('agent-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') agentLogin();
+            });
+            
+            // Connexion Superviseur
+            document.getElementById('supervisor-login-btn').addEventListener('click', supervisorLogin);
+            document.getElementById('supervisor-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') supervisorLogin();
+            });
+            
+            // Connexion Subsystem Admin
+            document.getElementById('subsystem-login-btn').addEventListener('click', subsystemAdminLogin);
+            document.getElementById('subsystem-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') subsystemAdminLogin();
+            });
+            
+            // Connexion Master
+            document.getElementById('master-login-btn').addEventListener('click', masterLogin);
+            document.getElementById('master-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') masterLogin();
+            });
+        }
+        
+        // Changer de tab
+        function switchTab(tabId) {
+            // Mettre à jour les tabs
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Afficher le contenu correspondant
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Réinitialiser les erreurs
+            hideError();
+        }
+        
+        // Afficher une erreur
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            
+            // Cacher automatiquement après 5 secondes
+            setTimeout(() => {
+                hideError();
+            }, 5000);
+        }
+        
+        // Cacher l'erreur
+        function hideError() {
+            document.getElementById('error-message').classList.remove('show');
+        }
+        
+        // Vérifier le statut du système
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                const data = await response.json();
+                
+                const statusDot = document.getElementById('system-status');
+                const statusText = document.getElementById('status-text');
+                
+                if (data.status === 'ok') {
+                    statusDot.className = 'status-dot';
+                    statusText.textContent = 'Système opérationnel';
+                } else {
+                    statusDot.className = 'status-dot warning';
+                    statusText.textContent = 'Système en maintenance';
+                }
+            } catch (error) {
+                console.error('Erreur vérification statut:', error);
+                const statusDot = document.getElementById('system-status');
+                const statusText = document.getElementById('status-text');
+                statusDot.className = 'status-dot danger';
+                statusText.textContent = 'Connexion serveur impossible';
+            }
+        }
+        
+        // Connexion Agent
+        async function agentLogin() {
+            const username = document.getElementById('agent-username').value.trim();
+            const password = document.getElementById('agent-password').value;
+            const loginBtn = document.getElementById('agent-login-btn');
+            
+            if (!username || !password) {
+                showError('Identifiant et mot de passe requis');
+                return;
+            }
+            
+            // Désactiver le bouton et afficher le spinner
+            const originalHtml = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<div class="loading-spinner"></div>';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/agent/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Stocker le token et rediriger
+                    localStorage.setItem('novaLottoAgentToken', data.token);
+                    localStorage.setItem('novaLottoAgentUser', JSON.stringify(data.user));
+                    
+                    // Rediriger vers l'interface agent
+                    window.location.href = 'index.html';
+                } else {
+                    showError(data.error || 'Identifiants incorrects');
+                }
+            } catch (error) {
+                console.error('Erreur connexion agent:', error);
+                showError('Erreur de connexion au serveur');
+            } finally {
+                // Réactiver le bouton
+                loginBtn.innerHTML = originalHtml;
+                loginBtn.disabled = false;
+            }
+        }
+        
+        // Connexion Superviseur
+        async function supervisorLogin() {
+            const username = document.getElementById('supervisor-username').value.trim();
+            const password = document.getElementById('supervisor-password').value;
+            const level = document.getElementById('supervisor-level').value;
+            const loginBtn = document.getElementById('supervisor-login-btn');
+            
+            if (!username || !password) {
+                showError('Identifiant et mot de passe requis');
+                return;
+            }
+            
+            // Désactiver le bouton et afficher le spinner
+            const originalHtml = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<div class="loading-spinner"></div>';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/supervisor/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username, 
+                        password,
+                        level: parseInt(level) 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Stocker le token et rediriger selon le niveau
+                    if (level === '1') {
+                        localStorage.setItem('novaLottoSupervisorL1Token', data.token);
+                        localStorage.setItem('novaLottoSupervisorL1User', JSON.stringify(data.user));
+                        window.location.href = 'control-level1.html';
+                    } else {
+                        localStorage.setItem('novaLottoSupervisorToken', data.token);
+                        localStorage.setItem('novaLottoSupervisorUser', JSON.stringify(data.user));
+                        window.location.href = 'control-level2.html';
+                    }
+                } else {
+                    showError(data.error || 'Identifiants incorrects');
+                }
+            } catch (error) {
+                console.error('Erreur connexion superviseur:', error);
+                showError('Erreur de connexion au serveur');
+            } finally {
+                // Réactiver le bouton
+                loginBtn.innerHTML = originalHtml;
+                loginBtn.disabled = false;
+            }
+        }
+        
+        // Connexion Subsystem Admin
+        async function subsystemAdminLogin() {
+            const username = document.getElementById('subsystem-username').value.trim();
+            const password = document.getElementById('subsystem-password').value;
+            const loginBtn = document.getElementById('subsystem-login-btn');
+            
+            if (!username || !password) {
+                showError('Identifiant et mot de passe requis');
+                return;
+            }
+            
+            // Désactiver le bouton et afficher le spinner
+            const originalHtml = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<div class="loading-spinner"></div>';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/subsystem/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Stocker le token et rediriger
+                    localStorage.setItem('novaLottoSubsystemToken', data.token);
+                    localStorage.setItem('novaLottoSubsystemUser', JSON.stringify(data.user));
+                    localStorage.setItem('novaLottoSubsystem', JSON.stringify(data.subsystem));
+                    
+                    window.location.href = 'subsystem-admin.html';
+                } else {
+                    showError(data.error || 'Identifiants incorrects');
+                }
+            } catch (error) {
+                console.error('Erreur connexion admin sous-système:', error);
+                showError('Erreur de connexion au serveur');
+            } finally {
+                // Réactiver le bouton
+                loginBtn.innerHTML = originalHtml;
+                loginBtn.disabled = false;
+            }
+        }
+        
+        // Connexion Master
+        async function masterLogin() {
+            const username = document.getElementById('master-username').value.trim();
+            const password = document.getElementById('master-password').value;
+            const loginBtn = document.getElementById('master-login-btn');
+            
+            if (!username || !password) {
+                showError('Identifiant et mot de passe requis');
+                return;
+            }
+            
+            // Désactiver le bouton et afficher le spinner
+            const originalHtml = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<div class="loading-spinner"></div>';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/master/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Stocker le token et rediriger
+                    localStorage.setItem('novaLottoMasterToken', data.token);
+                    localStorage.setItem('novaLottoMasterUser', JSON.stringify(data.user));
+                    
+                    window.location.href = 'master-dashboard.html';
+                } else {
+                    showError(data.error || 'Identifiants incorrects');
+                }
+            } catch (error) {
+                console.error('Erreur connexion master:', error);
+                showError('Erreur de connexion au serveur');
+            } finally {
+                // Réactiver le bouton
+                loginBtn.innerHTML = originalHtml;
+                loginBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
