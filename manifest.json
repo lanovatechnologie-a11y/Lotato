@@ -1,0 +1,15 @@
+{
+  "name": "Nova Technology",
+  "short_name": "Nova",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f5dd02ff",
+  "theme_color": "#e406e4ff",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
